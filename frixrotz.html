@@ -1,0 +1,95 @@
+<html>
+<head>
+  <title></title>
+</head>
+<script type="text/javascript">
+
+if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+  ajax = new XMLHttpRequest();
+} else {// code for IE6, IE5
+  ajax = new ActiveXObject("Microsoft.XMLHTTP");
+}
+
+if(ajax != null) {
+  ajax.onreadystatechange=cfunc;
+  ajax.open("GET","http://fritz.box/jason_boxinfo.xml",true);
+  // ajax.onreadystatechange = function() {
+  //   if(this.readyState == 4) {
+  //     if(this.status == 200) {
+  //       var antwText = this.responseText;
+  //       document.write(antwText);
+
+  //       antXML = this.responseXML.getElementsByTagName("BoxInfo");
+  //       if(antXML.length == 0) // PrÃ¤fix notwendig
+  //       {
+  //       var xmltext = antwText.split(":");
+  //       if(xmltext.length != 0)
+  //       {
+  //       var s1 = xmltext[0];
+  //       g_tagPrefix = xmltext[0].substr(xmltext[0].indexOf("<") + 1,xmltext[0].length) + ":";
+  //       }
+  //       antXML = this.responseXML.getElementsByTagName(g_tagPrefix + "BoxInfo");  
+  //       }
+      
+
+        
+  //     }
+  //   }
+  // }
+  ajax.send();
+}
+
+
+var g_tagPrefix;
+var g_jasonTags = ["Name","HW","Version","Revision","Serial","OEM","Lang","Annex","Lab","Country","UpdateConfig"];
+
+function cfunc() {
+  var xhr = ajax;
+  //trace("xhr.readyState = " + xhr.readyState + " /xhr.status = " + xhr.status);
+  if(xhr.readyState==4 && xhr.status==200)
+  {
+    var x,i;
+    g_tagPrefix = "";     
+    
+    var s = xhr.responseText;
+    //document.write(s);
+          
+    x = xhr.responseXML.getElementsByTagName("BoxInfo");
+    if(x.length == 0) // Präfix notwendig
+    {
+      var sx = s.split(":");
+      if(sx.length != 0)
+      {
+        var s1 = sx[0];
+        g_tagPrefix = sx[0].substr(sx[0].indexOf("<") + 1,sx[0].length) + ":";
+      }
+      x = xhr.responseXML.getElementsByTagName(g_tagPrefix + "BoxInfo");  
+    }
+
+    //document.write("<br>")
+    document.write(g_jasonTags[0] + ": " + getValueByFRITZBoxTag(g_jasonTags[0],x[0]) + "<br>");
+    document.write(g_jasonTags[1] + ": " + getValueByFRITZBoxTag(g_jasonTags[1],x[0]) + "<br>");
+    document.write(g_jasonTags[2] + ": " + getValueByFRITZBoxTag(g_jasonTags[2],x[0]) + "<br>");
+    document.write(g_jasonTags[3] + ": " + getValueByFRITZBoxTag(g_jasonTags[3],x[0]) + "<br>");
+    document.write(g_jasonTags[4] + ": " + getValueByFRITZBoxTag(g_jasonTags[4],x[0]) + "<br>");
+    document.write(g_jasonTags[5] + ": " + getValueByFRITZBoxTag(g_jasonTags[5],x[0]) + "<br>");
+    document.write(g_jasonTags[6] + ": " + getValueByFRITZBoxTag(g_jasonTags[6],x[0]) + "<br>");
+    document.write(g_jasonTags[7] + ": " + getValueByFRITZBoxTag(g_jasonTags[7],x[0]) + "<br>");
+    //document.write(g_jasonTags[8] + ": " + getValueByFRITZBoxTag(g_jasonTags[8],x[0]) + "<br>");
+    document.write(g_jasonTags[9] + ": " + getValueByFRITZBoxTag(g_jasonTags[9],x[0]) + "<br>");
+    document.write(g_jasonTags[10] + ": " + getValueByFRITZBoxTag(g_jasonTags[10],x[0]) + "<br>");
+
+  }
+}
+
+function getValueByFRITZBoxTag(tag,item) {
+  var s = item.getElementsByTagName(g_tagPrefix + tag);
+  return s[0].firstChild.nodeValue;
+}
+
+
+</script>
+<body>
+
+</body>
+</html>
